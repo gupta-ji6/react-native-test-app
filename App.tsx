@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -24,6 +24,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {decrypt, encrypt} from './cipher';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -61,6 +62,18 @@ function App(): React.JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  useEffect(() => {
+    const testCipher = async () => {
+      const data = await encrypt();
+
+      if (data) {
+        await decrypt({iv: data.iv, cipher: data.cipher});
+      }
+    };
+
+    testCipher();
+  }, []);
 
   return (
     <SafeAreaView style={backgroundStyle}>
